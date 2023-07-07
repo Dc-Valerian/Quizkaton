@@ -299,11 +299,11 @@ const LandingPage = () => {
     setAnswering(!answering);
   };
 
-  useEffect(() => {
-    getOneQuestion(allow).then((res: any) => {
-      setQuestion(res)
-    })
-  }, [])
+  // useEffect(() => {
+  //   getOneQuestion(allow).then((res: any) => {
+  //     setQuestion(res)
+  //   })
+  // }, [])
 
   console.log(question)
 

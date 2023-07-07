@@ -1,7 +1,6 @@
 import {useState} from "react"
 import styled from 'styled-components'
 // import data from "../Utils/Question"
-import { NavLink } from "react-router-dom"
 
 
 const data = [
@@ -17,7 +16,7 @@ const data = [
   ]
 
   
-  const [question, setQuestion] = useState("");
+  const [, setQuestion] = useState("");
 
   const Getonequestion = (id: any) => {
     const pic = data

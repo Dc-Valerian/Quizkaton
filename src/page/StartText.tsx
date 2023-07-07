@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import img1 from "../assets/log.png"
 import { NavLink } from "react-router-dom";
@@ -11,10 +11,9 @@ const StartTest = () => {
 
 
 
-	const [numb, setNumb] = React.useState<string>()
-	const [newState1, setNewState1] = useState<any>({})
+	const [numb] = React.useState<string>()
 
-	const [allow, setAllow] = useRecoilState(holdValue)
+	const [, setAllow] = useRecoilState(holdValue)
 
 
 

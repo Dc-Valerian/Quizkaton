@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom"
 import StartPage from "../components/common/Header"
 import HomeScreen from "../page/HomeScreen"
 import Question from "../page/Question"
+import Error from "../Error"
 
 export const mainRoute = createBrowserRouter([
     {
@@ -18,5 +19,9 @@ export const mainRoute = createBrowserRouter([
     {
         path: "/questions",
         element: <Question />
+    },
+    {
+        path:"*",
+        element:<Error/>
     }
 ])
