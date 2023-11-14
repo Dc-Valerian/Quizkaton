@@ -37,7 +37,7 @@ export const deleteOneQuestion = async (id: any) => {
     try {
         console.log(id)
         return await axios.delete(`http://localhost:2112/data/${id}`).then(() => {
-            console.log(`${id} deleted successfully`)
+            console.log(`${id} deleted successfully deleted`)
         })
     } catch (error) {
         console.log(error)

@@ -1,33 +1,29 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+// import { deleteOneQuestion } from "../Utils/schoolAPI";
 import { NavLink } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { holdValue } from "../global/global";
-import { deleteOneQuestion } from "../utils/APIs";
+import { deleteOneQuestion, getOneQuestion } from "../utils/APIs";
 import quizData from "../data/question.json";
 
 const LandingPage = () => {
   const allow = useRecoilValue(holdValue);
   const [question, setQuestion] = useState<any>({});
   const [filteredQuestion, setFilteredQuestion] = useState<any | null>(null);
-  const [answering, setAnswering] = React.useState(false);
-  const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
+  const [answering, setAnswering] = React.useState(false);
   const check = () => {
-    const isAnswerCorrect =
-      filteredQuestion?.answer === question.selectedAnswer;
-    setIsCorrect(isAnswerCorrect);
-    setShowPopup(true);
+    setAnswering(!answering);
   };
 
   useEffect(() => {
+    // Filter the questions based on the inputted ID
     const filtered = quizData.data.find((item) => item.id === allow);
     setFilteredQuestion(filtered || null);
-    setQuestion({});
-    setShowPopup(false);
-    setIsCorrect(null);
   }, [allow]);
+
+  console.log(question);
 
   return (
     <div>
@@ -135,11 +131,6 @@ const LandingPage = () => {
                 </CircleV>
               </NavLink>
             </BottomCard>
-            {showPopup && (
-              <Popup bg={isCorrect ? "green" : "red"}>
-                {isCorrect ? "Correct!" : "Wrong!"}
-              </Popup>
-            )}
           </Main>
         ) : (
           <Div>
@@ -158,20 +149,6 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
-
-const Popup = styled.div<{ bg: string }>`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
-  background-color: ${({ bg }) => bg};
-  color: white;
-  font-size: 24px;
-  font-weight: 700;
-  border-radius: 10px;
-  z-index: 999;
-`;
 
 const Div = styled.div`
   display: flex;
@@ -378,7 +355,6 @@ const Butt = styled.div<{ bg: string }>`
   margin: 20px;
   background-color: ${({ bg }) => (bg ? "#0D1723" : "#34A853")};
   padding: 20px 28px;
-  cursor: pointer;
 `;
 
 const But = styled.div`
