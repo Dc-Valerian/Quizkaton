@@ -2,57 +2,9 @@ import React, { useState, useEffect } from "react";
 import Question from "./Question";
 import InputComponent from "./InputComponent";
 import Swal from "sweetalert2";
+import quizData from "./quizData";
 
 const Quiz: React.FC = () => {
-  const quizData = [
-    {
-      question: "What is the capital of France?",
-      options: ["Berlin", "Paris", "Madrid", "Rome"],
-      correctAnswer: "Paris",
-    },
-    {
-      question: "What is the capital of Nigeria?",
-      options: ["Berlin", "Paris", "Madrid", "Rome"],
-      correctAnswer: "Paris",
-    },
-    {
-      question: "What is the capital of Canada?",
-      options: ["Berlin", "Paris", "Madrid", "Rome"],
-      correctAnswer: "Paris",
-    },
-    {
-      question: "What is the capital of Usa?",
-      options: ["Berlin", "Paris", "Madrid", "Rome"],
-      correctAnswer: "Paris",
-    },
-    {
-      question: "What is the capital of aoa?",
-      options: ["Berlin", "Paris", "Madrid", "Rome"],
-      correctAnswer: "Paris",
-    },
-    {
-      question: "What is the capital of aoa?",
-      options: ["Berlin", "Paris", "Madrid", "Rome"],
-      correctAnswer: "Paris",
-    },
-    {
-      question: "What is the capital of aoa?",
-      options: ["Berlin", "Paris", "Madrid", "Rome"],
-      correctAnswer: "Paris",
-    },
-    {
-      question: "What is the capital of aoa?",
-      options: ["Berlin", "Paris", "Madrid", "Rome"],
-      correctAnswer: "Paris",
-    },
-    {
-      question: "What is the capital of aoa?",
-      options: ["Berlin", "Paris", "Madrid", "Rome"],
-      correctAnswer: "Paris",
-    },
-    // Add more questions...
-  ];
-
   const [currentQuestion, setCurrentQuestion] = useState<number | null>(null);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [userAnswer, setUserAnswer] = useState("");
@@ -72,6 +24,14 @@ const Quiz: React.FC = () => {
         text: "Please choose another question.",
         icon: "error",
         confirmButtonText: "OK",
+      }).then(() => {
+        // Reset the current question index and hide the result
+        setCurrentQuestion(null);
+        setShowResult(false);
+        setUserAnswer(""); // Reset user's answer
+        // Clear the timer and set it again for the next question
+        clearTimeout(timer as number);
+        setTimeRemaining(0);
       });
     } else {
       setUserAnswers([...userAnswers, selectedOption]);
