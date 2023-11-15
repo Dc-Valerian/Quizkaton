@@ -56,7 +56,7 @@ const StartTest = () => {
               // }}
             />
 
-            <NavLink to={numb !== "" ? "/quiz" : "#"}>
+            <NavLink to={numb !== "" ? "/questions" : "#"}>
               <Button
                 style={{
                   backgroundColor: numb !== "" ? "purple" : "silver",

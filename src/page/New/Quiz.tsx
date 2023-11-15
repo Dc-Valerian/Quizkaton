@@ -72,51 +72,40 @@ const Quiz: React.FC = () => {
     if (currentQuestionIndex !== null) {
       const isCorrect =
         userAnswer === quizData[currentQuestionIndex].correctAnswer;
-      const correctAnswer = quizData[currentQuestionIndex].correctAnswer;
 
-      Swal.fire({
-        title: isCorrect ? "Correct!" : "Incorrect!",
-        text: isCorrect
-          ? `You Picked the correct answer: ${correctAnswer}`
-          : `You Picked the wrong answer: ${userAnswer}. The correct answer is: ${correctAnswer}`,
-        icon: isCorrect ? "success" : "error",
-        confirmButtonText: "Next Question",
-      }).then(() => {
-        // Reset the current question index and hide the result
-        setCurrentQuestion(null);
-        setShowResult(false);
-        // Clear the timer and set it again for the next question
-        clearTimeout(timer as number);
-
-        // Reset the time remaining to 0 seconds
-        setTimeRemaining(0);
-
-        // Start a new timer for the next question
-        const questionTimer = setTimeout(() => {
-          // Timer callback - remove the question and show a warning
+      if (timeRemaining !== null && timeRemaining <= 0) {
+        // Time has elapsed, show "Time's up!" alert
+        Swal.fire({
+          title: "Time's up!",
+          text: "You ran out of time for this question.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        }).then(() => {
+          // Reset the current question index and hide the result
           setCurrentQuestion(null);
           setShowResult(false);
-
-          Swal.fire({
-            title: "Time's up!",
-            text: "You ran out of time for this question.",
-            icon: "warning",
-            confirmButtonText: "OK",
-          });
-        }, 0); // Set to 0 milliseconds for an immediate callback
-
-        setTimer(questionTimer);
-
-        // Set a timer for updating the time remaining display every second
-        const displayTimer = setInterval(() => {
-          setTimeRemaining((prevTime) =>
-            prevTime !== null && prevTime > 0 ? prevTime - 1 : null
-          );
-        }, 1000);
-
-        // Clear the display timer when the question changes
-        return () => clearInterval(displayTimer);
-      });
+          // Clear the timer and set it again for the next question
+          clearTimeout(timer as number);
+          setTimeRemaining(0);
+        });
+      } else {
+        // User answered before time ran out
+        Swal.fire({
+          title: isCorrect ? "Correct!" : "Incorrect!",
+          text: isCorrect
+            ? `You Picked the correct answer: ${userAnswer}`
+            : `You Picked the wrong answer: ${userAnswer}. The correct answer is: ${quizData[currentQuestionIndex].correctAnswer}`,
+          icon: isCorrect ? "success" : "error",
+          confirmButtonText: "Next Question",
+        }).then(() => {
+          // Reset the current question index and hide the result
+          setCurrentQuestion(null);
+          setShowResult(false);
+          // Clear the timer and set it again for the next question
+          clearTimeout(timer as number);
+          setTimeRemaining(0);
+        });
+      }
     }
   };
 

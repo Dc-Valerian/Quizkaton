@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 import StartPage from "../components/common/Header";
 import HomeScreen from "../page/HomeScreen";
-// import Question from "../page/Question"
+import Question from "../page/Question";
 import Error from "../Error";
 import Quiz from "../page/New/Quiz";
 
@@ -17,7 +17,7 @@ export const mainRoute = createBrowserRouter([
   },
   {
     path: "/questions",
-    element: <Quiz />,
+    element: <Question />,
   },
   {
     path: "/quiz",
