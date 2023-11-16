@@ -14,6 +14,9 @@ const Quiz: React.FC = () => {
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [checking, setChecking] = useState(false);
   const [greenOptions, setGreenOptions] = useState<string[]>([]);
+  const [answeredQuestions, setAnsweredQuestions] = useState<number[]>([]);
+  const [unansweredQuestions, setUnansweredQuestions] = useState<number[]>([]);
+  // const [showAnswered, setShowAnswered] = useState(true);
 
   const handleOptionSelect = (selectedOption: string) => {
     setUserAnswer(selectedOption);
@@ -47,6 +50,16 @@ const Quiz: React.FC = () => {
 
       // Rest of your logic for handling the selected option
     }
+    // If the current question was answered, update the state for answered questions
+    if (!userAnswers.includes(selectedOption)) {
+      setAnsweredQuestions([...answeredQuestions, currentQuestion as number]);
+    }
+
+    // Update the state for unanswered questions
+    const updatedUnansweredQuestions = unansweredQuestions.filter(
+      (question) => question !== currentQuestion
+    );
+    setUnansweredQuestions(updatedUnansweredQuestions);
   };
 
   const handleNextQuestion = () => {
@@ -157,6 +170,14 @@ const Quiz: React.FC = () => {
       // Clear the display timer when the question changes
       return () => clearInterval(displayTimer);
     }
+    // Set the current question
+    setCurrentQuestion(value);
+
+    // Update unanswered questions excluding the current question
+    const updatedUnanswered = Array.from(Array(quizData.length).keys()).filter(
+      (question) => question !== value
+    );
+    setUnansweredQuestions(updatedUnanswered);
   };
 
   const handleCheck = () => {
@@ -231,6 +252,35 @@ const Quiz: React.FC = () => {
           )}
         </div>
       )}
+
+      {/* <div>
+        <button onClick={() => setShowAnswered(true)}>
+          Show Answered Questions
+        </button>
+        <button onClick={() => setShowAnswered(false)}>
+          Show Unanswered Questions
+        </button>
+
+        {showAnswered ? (
+          <div>
+            <h2>Answered Questions:</h2>
+            {answeredQuestions.map((questionNumber) => (
+              <div key={questionNumber}>
+             
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div>
+            <h2>Unanswered Questions:</h2>
+            {unansweredQuestions.map((questionNumber) => (
+              <div key={questionNumber}>
+              
+              </div>
+            ))}
+          </div>
+        )}
+      </div> */}
     </div>
   );
 };

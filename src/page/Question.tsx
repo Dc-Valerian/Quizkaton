@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { holdValue } from "../global/global";
 import quizData from "../data/question.json";
+import Swal from "sweetalert2";
 
 const LandingPage = () => {
   const allow = useRecoilValue(holdValue);
@@ -13,6 +14,9 @@ const LandingPage = () => {
   const [answering, setAnswering] = React.useState(false);
   const [answered, setAnswered] = useState<boolean>(false);
   const [questionAnswered, setQuestionAnswered] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState(30); // Timer duration in seconds
+  const [timerRunning, setTimerRunning] = useState(false);
 
   const check = () => {
     setAnswering(!answering);
@@ -22,6 +26,12 @@ const LandingPage = () => {
       setAnswered(true);
       setQuestionAnswered(false);
     }
+  };
+
+  const handleOptionSelect = (option: string) => {
+    setSelectedOption(option);
+    startTimer(); // Start the timer when an option is selected
+    // Add logic to handle other functionalities when an option is selected
   };
 
   useEffect(() => {
@@ -78,6 +88,37 @@ const LandingPage = () => {
     }
   }, [answeredQuestions]);
 
+  const startTimer = () => {
+    setTimerRunning(true);
+    setTimeLeft(30); // Reset timer to 30 seconds
+  };
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    if (timerRunning) {
+      timer = setTimeout(() => {
+        if (timeLeft > 0) {
+          setTimeLeft((prevTime) => prevTime - 1);
+        } else {
+          setTimerRunning(false);
+          Swal.fire({
+            title: "Time's up!",
+            text: "Your time has elapsed.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          }).then(() => {
+            // Handle what happens when time elapses (e.g., go back to input)
+            // For example:
+            // Redirect to the input page
+          });
+        }
+      }, 1000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [timeLeft, timerRunning]);
+
   return (
     <div>
       <Container>
@@ -86,6 +127,8 @@ const LandingPage = () => {
             <div style={{ fontWeight: "600" }}>
               Attempting Question Number {allow}
             </div>
+            {/* Display timer at the top */}
+            <Timer>{timeLeft} seconds</Timer>
             <br />
             <Holder key={filteredQuestion.id}>
               <Card>{filteredQuestion.question}</Card>
@@ -93,10 +136,15 @@ const LandingPage = () => {
               <CircleII />
               <CircleIII />
             </Holder>
+            {selectedOption && <div>You have selected: {selectedOption}</div>}
+
             <BottomCard>
               <CircleIV onClick={check}>Check</CircleIV>
               <But>
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                  style={{ display: "flex", alignItems: "center" }}
+                  onClick={() => handleOptionSelect(filteredQuestion?.a)}
+                >
                   {" "}
                   A.
                   {answering ? (
@@ -115,7 +163,10 @@ const LandingPage = () => {
                     </div>
                   )}
                 </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                  style={{ display: "flex", alignItems: "center" }}
+                  onClick={() => handleOptionSelect(filteredQuestion?.b)}
+                >
                   {" "}
                   B.
                   {answering ? (
@@ -136,7 +187,10 @@ const LandingPage = () => {
                 </div>
               </But>
               <But>
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                  style={{ display: "flex", alignItems: "center" }}
+                  onClick={() => handleOptionSelect(filteredQuestion?.c)}
+                >
                   C.
                   {answering ? (
                     <Butt
@@ -154,7 +208,10 @@ const LandingPage = () => {
                     </div>
                   )}
                 </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                  style={{ display: "flex", alignItems: "center" }}
+                  onClick={() => handleOptionSelect(filteredQuestion?.d)}
+                >
                   {" "}
                   D.
                   {answering ? (
@@ -193,7 +250,9 @@ const LandingPage = () => {
           </Main>
         ) : (
           <Div>
-            <div style={{ display: "flex" }}>Question "{allow}" not found.</div>
+            <div style={{ display: "flex" }}>
+              Question "{allow}" is not in the dataBase.
+            </div>
             <NavLink
               to="/start"
               style={{ textDecoration: "none", color: "white" }}
@@ -208,6 +267,11 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+const Timer = styled.div`
+  background-color: rosybrown;
+  font-size: 18px;
+  margin-bottom: 10px;
+`;
 const Message = styled.div`
   color: red;
   font-size: 18px;
@@ -417,9 +481,13 @@ const Circle = styled.div`
 
 const Butt = styled.div<{ bg: string }>`
   margin: 20px;
-  background-color: ${({ bg }) => (bg ? "#0D1723" : "#34A853")};
+  background-color: ${({ bg }) => (bg ? "pink" : "#34A853")};
   padding: 20px 28px;
   cursor: pointer;
+
+  &:hover {
+    background-color: orange;
+  }
 `;
 
 const But = styled.div`
